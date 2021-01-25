@@ -4,9 +4,9 @@
 Network network = new Network();
 
 class Network {
-  static final int ON_OFF_THRESHOLD = 25;
+  static final int ON_OFF_THRESHOLD = 40;
   static final int OCTAVE_PRESSURE = 100;
-  static final int INTERCEPT_PRESSURE = 25;
+  static final int INTERCEPT_PRESSURE = 50;
 
   char[] finger_position = new char[6];
 
@@ -56,14 +56,19 @@ class Network {
   }
 
   void setExpression() {
-    midiOut.setExpression(round(min(127, pressure * .6)));
+    midiOut.setExpression(round(min(127, pressure * EXPRESSION_COEF)));
   }
 
   boolean is_note_on;
   void update_is_note_on() {
     boolean new_is_note_on = pressure > ON_OFF_THRESHOLD;
-    if ((! is_note_on) && new_is_note_on) {
-      tututu_last_max = pressure;
+    if (is_note_on != new_is_note_on) {
+      // tututu_last_max = pressure;
+      if (new_is_note_on) {
+        midiOut.pitch_from_network = pitch;
+      } else {
+        midiOut.pitch_from_network = -1;
+      }
       noteEvent();
     }
     is_note_on = new_is_note_on;
@@ -77,7 +82,7 @@ class Network {
     float adjusted = pressure - dy - INTERCEPT_PRESSURE;
     octave_residual = adjusted / OCTAVE_PRESSURE;
     octave = max(0, round(octave_residual));
-    octave_residual -= octave;
+    octave_residual = max(-.5, octave_residual - octave);
     pitchBend();
     updatePitch();
   }
@@ -86,8 +91,7 @@ class Network {
     return 1 / (1f + exp(-x));
   }
 
-  static final float MIDI_BEND_MAX = 1; // 1 semitone
-  static final float FLUTE_BEND_MAX = 0.2;
+  static final float MIDI_BEND_MAX = 2; // semitones
   // FLUTE_BEND_MAX should not be close to 1 otherwise MIDI data byte potentially overflow
   static final float BEND_COEFFICIENT = FLUTE_BEND_MAX / MIDI_BEND_MAX;
   static final int PITCH_BEND_ORIGIN = 8192;

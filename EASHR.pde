@@ -3,16 +3,20 @@
 import java.util.Arrays;
 import processing.serial.*;
 
-final static boolean DEBUGGING_NO_ARDUINO = false;
+final static boolean DEBUGGING_NO_ARDUINO = true;
 final static int COM = 0;
+final static float FLUTE_BEND_MAX = .4;
 final static int CAPACITIVE_THRESHOLD = 3;
 final static int LOW_PASS = 75;
-final static boolean MIDI_advanced_expression = true;
-final static float CURSOR_SIZE = .7;
-final static int TRANSPOSE = 48;
+final static boolean MIDI_advanced_expression = false;
+final static int MAX_PRESSURE = 400;
+final static float CURSOR_SIZE = 1f;
+final static float EXPRESSION_COEF = .4;
+final static int TRANSPOSE_OCTAVES = 3;
 
 final static String TITLE = "The EASHR";
 final static int ROUND_ROBIN_PACKET_MAX_SIZE = 127;  // one-byte length indicator maximum 127 on serial
+final static int TRANSPOSE = TRANSPOSE_OCTAVES * 12;
 
 Port port;
 boolean abort = false;
@@ -22,6 +26,9 @@ void setup() {
   // size(1366, 768);
   fullScreen();
   fill(255);
+  textAlign(CENTER);
+  textSize(36);
+  noStroke();
   gui = new GUI();
 }
 
@@ -136,9 +143,6 @@ void draw() {
     }
     arduino.loop();
   }
-  background(255);
-  stroke(0);
-  fill(255);
   network.loop();
   gui.loop();
 }
