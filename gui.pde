@@ -9,7 +9,7 @@ static final int[][] C = {
   {0,   98,  191}, 
   {119, 79,  194}, 
   {159, 29,  63}, 
-};
+};  // Designer: Ziyue Piao
 
 GUI gui;
 
