@@ -5,6 +5,7 @@ import processing.serial.*;
 
 final static boolean DEBUGGING_NO_ARDUINO = true;
 final static int COM = 0;
+final static boolean TOUCH_SCREEN = false;
 final static float FLUTE_BEND_MAX = .4;
 final static int CAPACITIVE_THRESHOLD = 3;
 final static int LOW_PASS = 75;

@@ -22,6 +22,14 @@ class GUI {
   boolean cursor_visible = true;
 
   GUI() {
+    initControl();
+  }
+
+  void initControl() {
+    if (TOUCH_SCREEN) {
+      has_robby = false;
+      return;
+    }
     try {
       robby = new Robot();
       has_robby = true;
@@ -111,7 +119,7 @@ class GUI {
   int diatone;
   void draw() {
     background(0);
-    if (! focused && DEBUGGING_NO_ARDUINO && has_robby) {
+    if (! focused) {
       fill(255);
       text("Click to continue", width / 2, height / 2);
       if (! cursor_visible) {
@@ -121,7 +129,7 @@ class GUI {
       }
       return;
     }
-    if (focused && DEBUGGING_NO_ARDUINO && has_robby) {
+    if (focused) {
       if (cursor_visible) {
         noCursor();
         cursor_visible = false;
@@ -180,9 +188,7 @@ class GUI {
       );
     }
     popMatrix();
-    if (has_robby || ! DEBUGGING_NO_ARDUINO) {
-      drawCursor();
-    }
+    drawCursor();
   }
 
   static final int CURSOT_R = 60;
