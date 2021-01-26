@@ -119,10 +119,10 @@ class Network {
     }
   }
 
-  int tututu_last_max;  // -1 means ready for a TU
-  int tututu_last_min;
-  static final float TUTUTU_RELEASE_THRESHOLD = 0.8f;
-  static final float TUTUTU_THRESHOLD = 1.3f;
+  // int tututu_last_max;  // -1 means ready for a TU
+  // int tututu_last_min;
+  // static final float TUTUTU_RELEASE_THRESHOLD = 0.8f;
+  // static final float TUTUTU_THRESHOLD = 1.3f;
   void detectTuTuTu() {
     // if (tututu_last_max != -1) {
     //   // not ready for TU
@@ -146,13 +146,13 @@ class Network {
 
   void noteEvent() {
     midiOut.onNoteControlChange();
-    print("noteEvent. Octave ");
-    print(octave);
-    print(", fingers ");
-    for (char f : finger_position) {
-      print(f);
-    }
-    println(". ");
+    // print("noteEvent. Octave ");
+    // print(octave);
+    // print(", fingers ");
+    // for (char f : finger_position) {
+    //   print(f);
+    // }
+    // println(". ");
   }
 
   int fingersToPitchClass(char[] fingers) {

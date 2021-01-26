@@ -65,6 +65,10 @@ class GUI {
         }
       }
       network.onPressureChange(breath_pressure);
+    } else {
+      int diatone = pitchClass2Diatone(network.pitch_class);
+      cursorX = width * diatone / 7;
+      cursorY = network.pressure * MAX_PRESSURE / height;
     }
     draw();
   }
@@ -169,7 +173,7 @@ class GUI {
     fill(0);
     rect(0, 0, width, network.ON_OFF_THRESHOLD * height / MAX_PRESSURE);
     if (network.is_note_on) {
-      diatone = floor((network.pitch_class + 1) / 2f);
+      diatone = pitchClass2Diatone(network.pitch_class);
       float dy = network.pitch_class * slope;
       float y = dy + network.INTERCEPT_PRESSURE + network.octave * network.OCTAVE_PRESSURE;
       int to_diatone = diatone;
@@ -189,6 +193,10 @@ class GUI {
     }
     popMatrix();
     drawCursor();
+  }
+
+  int pitchClass2Diatone(int pitch_class) {
+    return floor((pitch_class + 1) / 2f);
   }
 
   static final int CURSOT_R = 60;
