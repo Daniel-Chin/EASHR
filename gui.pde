@@ -66,7 +66,7 @@ class GUI {
       }
       network.onPressureChange(breath_pressure);
     } else {
-      int diatone = pitchClass2Diatone(network.pitch_class);
+      int diatone = pitchClass2Diatone(midiOut.pitch_from_network % 12);
       cursorX = width * diatone / 7;
       cursorY = network.pressure * MAX_PRESSURE / height;
     }
