@@ -156,23 +156,35 @@ class Network {
   }
 
   int fingersToPitchClass(char[] fingers) {
-    switch (String.valueOf(fingers)) {
-      case "______": 
-        return 0;
-      case "_____^": 
-        return 2;
-      case "____^^": 
-        return 4;
-      case "___^^^": 
-        return 5;
-      case "__^^^^": 
-        return 7;
-      case "_^^^^^": 
-        return 9;
-      case "^^^^^^": 
-        return 11;
-      default:
-        return -1;
+    int i;
+    for (i = 0; i < 6; i ++) {
+      if (fingers[i] == '^') {
+        break;
+      }
     }
+    i = 6 - i;
+    if (i < 3) {
+      return i * 2;
+    } else {
+      return i * 2 - 1;
+    }
+    // switch (String.valueOf(fingers)) {
+    //   case "______": 
+    //     return 0;
+    //   case "_____^": 
+    //     return 2;
+    //   case "____^^": 
+    //     return 4;
+    //   case "___^^^": 
+    //     return 5;
+    //   case "__^^^^": 
+    //     return 7;
+    //   case "_^^^^^": 
+    //     return 9;
+    //   case "^^^^^^": 
+    //     return 11;
+    //   default:
+    //     return -1;
+    // }
   }
 }
