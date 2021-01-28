@@ -15,13 +15,14 @@ final static float CURSOR_SIZE = 1f;
 final static float EXPRESSION_COEF = .4;
 final static int TRANSPOSE_OCTAVES = 3;
 
-final static String TITLE = "The EASHR";
+final static String TITLE = "The Hyper-hybrid Flute";
 final static int ROUND_ROBIN_PACKET_MAX_SIZE = 127;  // one-byte length indicator maximum 127 on serial
 final static int TRANSPOSE = TRANSPOSE_OCTAVES * 12;
 
 Port port;
 boolean abort = false;
 String abort_msg = "ABORT";
+SceneHandshake sceneHandshake = null;
 
 void setup() {
   // size(1366, 768);
@@ -31,6 +32,9 @@ void setup() {
   textSize(36);
   noStroke();
   gui = new GUI();
+  if (! DEBUGGING_NO_ARDUINO) {
+    sceneHandshake = new SceneHandshake();
+  }
 }
 
 class Port {
@@ -136,6 +140,10 @@ void draw() {
     textSize(72);
     textAlign(CENTER, CENTER);
     text(abort_msg, 0, 0, width, height);
+    return;
+  }
+  if (arduino == null && sceneHandshake != null) {
+    sceneHandshake.draw();
     return;
   }
   if (arduino != null) {

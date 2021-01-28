@@ -5,7 +5,7 @@ class SceneHandshake {
   String port_name;
   
   SceneHandshake() {
-    super();
+    onEnter();
   }
   
   void onEnter() {
