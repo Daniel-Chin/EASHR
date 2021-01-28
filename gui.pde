@@ -35,8 +35,6 @@ class GUI {
       has_robby = true;
       last_mouse_X = mouseX;
       last_mouse_Y = mouseY;
-      noCursor();
-      cursor_visible = false;
     } catch (AWTException e) {
       println("Robot class not supported by your system!");
       has_robby = false;
