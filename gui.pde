@@ -54,7 +54,7 @@ class GUI {
       if (pitch_class >= 6) {
         pitch_class --;
       }
-      int breath_pressure = round((1 - cursorY / (float)(height)) * MAX_PRESSURE);
+      int breath_velocity = round((1 - cursorY / (float)(height)) * MAX_VELOCITY);
       for (int i = 0; i < 6; i ++) {
         if (i < 6 - diatone) {
           network.onFingerChange(i, '_');
@@ -62,11 +62,11 @@ class GUI {
           network.onFingerChange(i, '^');
         }
       }
-      network.onPressureChange(breath_pressure);
+      network.onVelocityChange(breath_velocity);
     } else {
       int diatone = pitchClass2Diatone(midiOut.pitch_from_network % 12);
-      cursorX = width * diatone / 7;
-      cursorY = network.pressure * MAX_PRESSURE / height;
+      cursorX = round(width * (diatone + .5) / 7);
+      cursorY = round(max(0, map(network.velocity, 0, MAX_VELOCITY, height, 0)));
     }
     draw();
   }
@@ -140,23 +140,23 @@ class GUI {
     pushMatrix();
     translate(0, height);
     scale(1, -1);
-    float slope = network.OCTAVE_PRESSURE / 12f;
+    float slope = network.OCTAVE_VELOCITY / 12f;
     for (int i = 0; i < 7; i ++) {
       int pitch_class = i * 2;
       if (pitch_class >= 6) {
         pitch_class --;
       }
       float dy = pitch_class * slope;
-      float intercept = dy + network.INTERCEPT_PRESSURE;
+      float intercept = dy + network.INTERCEPT_VELOCITY;
       int j = 0;
       for (
-        float y = intercept - network.OCTAVE_PRESSURE * .5; 
-        y < MAX_PRESSURE; 
-        y += network.OCTAVE_PRESSURE
+        float y = intercept - network.OCTAVE_VELOCITY * .5; 
+        y < MAX_VELOCITY; 
+        y += network.OCTAVE_VELOCITY
       ) {
         fill(C[i][0], C[i][1], C[i][2], min(255, (y / height + .25) * 256));
-        int y0 = round(y * height / MAX_PRESSURE);
-        int _h = network.OCTAVE_PRESSURE * height / MAX_PRESSURE;
+        int y0 = round(y * height / MAX_VELOCITY);
+        int _h = network.OCTAVE_VELOCITY * height / MAX_VELOCITY;
         if (j == 0) {
           _h += y0;
           y0 = 0;
@@ -169,11 +169,11 @@ class GUI {
       }
     }
     fill(0);
-    rect(0, 0, width, network.ON_OFF_THRESHOLD * height / MAX_PRESSURE);
+    rect(0, 0, width, network.ON_OFF_THRESHOLD * height / MAX_VELOCITY);
     if (network.is_note_on) {
       diatone = pitchClass2Diatone(network.pitch_class);
       float dy = network.pitch_class * slope;
-      float y = dy + network.INTERCEPT_PRESSURE + network.octave * network.OCTAVE_PRESSURE;
+      float y = dy + network.INTERCEPT_VELOCITY + network.octave * network.OCTAVE_VELOCITY;
       int to_diatone = diatone;
       if (network.octave_residual > 0) {
         to_diatone ++;
@@ -184,9 +184,9 @@ class GUI {
       fill(C[to_diatone][0], C[to_diatone][1], C[to_diatone][2], 60);
       rect(
         diatone * width / 7, 
-        y * height / MAX_PRESSURE, 
+        y * height / MAX_VELOCITY, 
         width / 7, 
-        height - cursorY - y * height / MAX_PRESSURE
+        height - cursorY - y * height / MAX_VELOCITY
       );
     }
     popMatrix();

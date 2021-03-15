@@ -1,12 +1,15 @@
 // parses haptic input to abstract musical objects. 
-// For example, parses breath pressure data stream into discreet note events. 
+// For example, parses breath velocity data stream into discreet note events. 
 
 Network network = new Network();
 
 class Network {
-  static final int ON_OFF_THRESHOLD = 40;
-  static final int OCTAVE_PRESSURE = 100;
-  static final int INTERCEPT_PRESSURE = 50;
+  // static final int ON_OFF_THRESHOLD = 20;
+  // static final int OCTAVE_VELOCITY = 130;
+  // static final int INTERCEPT_VELOCITY = 50;
+  static final int ON_OFF_THRESHOLD = 30;
+  static final int OCTAVE_VELOCITY = 200;
+  static final int INTERCEPT_VELOCITY = 90;
 
   char[] finger_position = new char[6];
 
@@ -44,9 +47,9 @@ class Network {
     updatePitch();
   }
 
-  int pressure;
-  void onPressureChange(int x) {
-    pressure = x;
+  int velocity;
+  void onVelocityChange(int x) {
+    velocity = x;
     setExpression();
     update_is_note_on();
     // if (is_note_on) {
@@ -54,16 +57,19 @@ class Network {
     // }
     useMountains();
   }
+  void onPressureChange(int x) {
+    onVelocityChange(p2v(x));
+  }
 
   void setExpression() {
-    midiOut.setExpression(round(min(127, pressure * EXPRESSION_COEF)));
+    midiOut.setExpression(mapExpression(velocity));
   }
 
   boolean is_note_on;
   void update_is_note_on() {
-    boolean new_is_note_on = pressure > ON_OFF_THRESHOLD;
+    boolean new_is_note_on = velocity > ON_OFF_THRESHOLD;
     if (is_note_on != new_is_note_on) {
-      // tututu_last_max = pressure;
+      // tututu_last_max = velocity;
       if (new_is_note_on) {
         midiOut.pitch_from_network = pitch;
       } else {
@@ -77,10 +83,10 @@ class Network {
   int octave;
   float octave_residual;
   void useMountains() {
-    float pitch_class_weight = OCTAVE_PRESSURE / 12f;
+    float pitch_class_weight = OCTAVE_VELOCITY / 12f;
     float dy = pitch_class * pitch_class_weight;
-    float adjusted = pressure - dy - INTERCEPT_PRESSURE;
-    octave_residual = adjusted / OCTAVE_PRESSURE;
+    float adjusted = velocity - dy - INTERCEPT_VELOCITY;
+    octave_residual = adjusted / OCTAVE_VELOCITY;
     octave = max(0, round(octave_residual));
     octave_residual = max(-.5, octave_residual - octave);
     pitchBend();
@@ -127,18 +133,18 @@ class Network {
     // if (tututu_last_max != -1) {
     //   // not ready for TU
     //   if (
-    //     pressure < tututu_last_max * TUTUTU_RELEASE_THRESHOLD
+    //     velocity < tututu_last_max * TUTUTU_RELEASE_THRESHOLD
     //   ) {
     //     tututu_last_max = -1;
-    //     tututu_last_min = pressure;
+    //     tututu_last_min = velocity;
     //   } else {
-    //     tututu_last_max = max(pressure, tututu_last_max);
+    //     tututu_last_max = max(velocity, tututu_last_max);
     //   }
     // } else {
     //   // ready for TU
-    //   tututu_last_min = min(pressure, tututu_last_min);
-    //   if (pressure > tututu_last_min * TUTUTU_THRESHOLD) {
-    //     tututu_last_max = pressure;
+    //   tututu_last_min = min(velocity, tututu_last_min);
+    //   if (velocity > tututu_last_min * TUTUTU_THRESHOLD) {
+    //     tututu_last_max = velocity;
     //     noteEvent();
     //   }
     // }
@@ -186,5 +192,13 @@ class Network {
     //   default:
     //     return -1;
     // }
+  }
+
+  int p2v(int x) {
+    println("p2v", x);
+    return round(pow(x * .01, 3.5) * 200);
+  }
+  int mapExpression(int velocity) {
+    return round(min(127, max(20, velocity * .4)));
   }
 }
