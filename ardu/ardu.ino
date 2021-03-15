@@ -106,9 +106,6 @@ void heartBeat() { // for debug
 }
 
 void loop() {
-  roundRobin_write('F');
-  roundRobin_write('4');
-  roundRobin_write('_');
   if (_abort) {
     roundRobin_loop();
     delay(1);
