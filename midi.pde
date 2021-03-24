@@ -80,7 +80,21 @@ class MidiOut {
     myBus.sendControllerChange(0, number, value);
   }
 
-  void setPitchBend(int value) {
+  static final float MIDI_BEND_MAX = 2; // semitones
+  static final int PITCH_BEND_ORIGIN = 8192;
+  void setPitchBend(float x) {
+    float k = x / MIDI_BEND_MAX;
+    if (k > 1) {
+      k = 1;
+      print("Warning: MIDI pitch bend out-of-bound. Value clipped. Intended: ");
+      println(x);
+    }
+    if (k < -1) {
+      k = -1;
+      print("Warning: MIDI pitch bend out-of-bound. Value clipped. Intended: ");
+      println(x);
+    }
+    int value = round(k * (PITCH_BEND_ORIGIN-1) + PITCH_BEND_ORIGIN);
     myBus.sendMessage(224, value % 128, value / 128);
   }
 }

@@ -3,21 +3,27 @@ import processing.serial.*;
 
 final static boolean DEBUGGING_NO_ARDUINO = false;
 // true: a mouse-based demo. false: connects to the hardware. 
+
 final static int COM = 3;
 // Port ID. In console log, look for the bluetooth port. 
+
 final static boolean TOUCH_SCREEN = false;
-final static float FLUTE_BEND_MAX = .0;
-// pitch bend coefficient. 
+final static float PITCH_BEND_MULTIPLIER = 1f;
+
 final static int CAPACITIVE_THRESHOLD = 3;
 // increase on humid days. 
+
 final static int LOW_PASS = 75;
 // low pass filter, milliseconds. 
+
 final static boolean MIDI_advanced_expression = false;
 // whether MIDI channel 7 or 11 is used. 
+
 final static int MAX_VELOCITY = 600;
 // if using the mouse-based demo, the top of the screen corresponds to MAX_VELOCITY
+
 final static float CURSOR_SIZE = 1f;
-final static int TRANSPOSE_OCTAVES = 5;
+final static int TRANSPOSE_OCTAVES = 1;
 
 final static String TITLE = "The Hyper-hybrid Flute";
 final static int ROUND_ROBIN_PACKET_MAX_SIZE = 127;  // one-byte length indicator maximum 127 on serial
