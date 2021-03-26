@@ -23,7 +23,7 @@ final static int MAX_VELOCITY = 600;
 // if using the mouse-based demo, the top of the screen corresponds to MAX_VELOCITY
 
 final static float CURSOR_SIZE = 1f;
-final static int TRANSPOSE_OCTAVES = 1;
+final static int TRANSPOSE_OCTAVES = 2;
 
 final static String TITLE = "The Hyper-hybrid Flute";
 final static int ROUND_ROBIN_PACKET_MAX_SIZE = 127;  // one-byte length indicator maximum 127 on serial
@@ -36,7 +36,8 @@ SceneHandshake sceneHandshake = null;
 
 void setup() {
   // size(1366, 768);
-  fullScreen();
+  // fullScreen();
+  size(200, 200);
   fill(255);
   textAlign(CENTER);
   textSize(36);
@@ -164,6 +165,7 @@ void draw() {
   }
   network.loop();
   // gui.loop();
+  background(255, 255, 0);
 }
 
 PApplet getThis() {
