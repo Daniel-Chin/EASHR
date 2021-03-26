@@ -41,7 +41,7 @@ void setup() {
   textAlign(CENTER);
   textSize(36);
   noStroke();
-  gui = new GUI();
+  // gui = new GUI();
   if (! DEBUGGING_NO_ARDUINO) {
     sceneHandshake = new SceneHandshake();
   }
@@ -163,7 +163,7 @@ void draw() {
     arduino.loop();
   }
   network.loop();
-  gui.loop();
+  // gui.loop();
 }
 
 PApplet getThis() {
