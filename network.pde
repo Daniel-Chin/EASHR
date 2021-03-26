@@ -4,17 +4,17 @@
 Network network = new Network();
 
 class Network {
-  static final float ON_OFF_THRESHOLD = 4.1;
   static final float PARA_EXPONENT = 3.5;
+  static final float ON_OFF_THRESHOLD = 13070;
   // "PB" for pitch bend
   static final float PARA_PB_SLOPE = -0.38858001759969996;
   static final float PARA_PB_INTERCEPT = 15.084561444938931;
   // "OT" for octave threshold
-  static final float PARA_OT_SLOPE = -11.514012809196554;
-  static final float PARA_OT_INTERCEPT = 0.4223719905882273;
+  static final float PARA_OT_SLOPE = 0.4223719905882273;
+  static final float PARA_OT_INTERCEPT = -11.514012809196554;
   static final float PARA_OT_HYSTERESIS = 0.6959966494737573;
 
-  static float ONE_OVER_PARA_OT_SLOPE;
+  float ONE_OVER_PARA_OT_SLOPE;
 
   char[] finger_position = new char[6];
 
@@ -59,6 +59,7 @@ class Network {
 
   float velocity;
   void updateVelocity(float x) {
+    // println("velocity", x);
     velocity = x;
     setExpression();
     update_is_note_on();
@@ -68,8 +69,13 @@ class Network {
 
   void setExpression() {
     midiOut.setExpression(round(
-      min(127, velocity * .0000025)
+      min(127, 
+        // velocity * .0000025
+        log(velocity) * 4
+      )
     ));
+    // println("expression intention", velocity * .0000025);
+    // println("expression intention", log(velocity) * 4);
   }
 
   boolean is_note_on;
