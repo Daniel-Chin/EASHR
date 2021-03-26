@@ -54,6 +54,7 @@ class MidiOut {
   }
 
   void onNoteControlChange() {
+    // println("pfn", pitch_from_network);
     if (ignore) {
       return;
     }
@@ -86,15 +87,21 @@ class MidiOut {
     float k = x / MIDI_BEND_MAX;
     if (k > 1) {
       k = 1;
-      print("Warning: MIDI pitch bend out-of-bound. Value clipped. Intended: ");
-      println(x);
+      warnPitchBend(x);
     }
     if (k < -1) {
       k = -1;
       print("Warning: MIDI pitch bend out-of-bound. Value clipped. Intended: ");
-      println(x);
+      warnPitchBend(x);
     }
     int value = round(k * (PITCH_BEND_ORIGIN-1) + PITCH_BEND_ORIGIN);
     myBus.sendMessage(224, value % 128, value / 128);
+  }
+
+  void warnPitchBend(float x) {
+    if (network.is_note_on) {
+      print("Warning: MIDI pitch bend out-of-bound. Value clipped. Intended: ");
+      println(x);
+    }
   }
 }
