@@ -5,7 +5,8 @@ Network network = new Network();
 
 class Network {
   static final float PARA_EXPONENT = 3.5;
-  static final float ON_OFF_THRESHOLD = 13070;
+  // static final float ON_OFF_THRESHOLD = 13070;
+  static final float ON_OFF_THRESHOLD = 7000;
   // "PB" for pitch bend
   static final float PARA_PB_SLOPE = -0.38858001759969996;
   static final float PARA_PB_INTERCEPT = 15.084561444938931;
@@ -71,11 +72,13 @@ class Network {
     midiOut.setExpression(round(
       min(127, 
         // velocity * .0000025
-        log(velocity) * 4
+        // log(velocity) * 4
+        pow(velocity, .5) * .02
       )
     ));
     // println("expression intention", velocity * .0000025);
     // println("expression intention", log(velocity) * 4);
+    println("expression intention", pow(velocity, .5) * .02);
   }
 
   boolean is_note_on;
